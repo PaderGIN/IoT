@@ -10,16 +10,15 @@ echo '
     <html id="App_interface">
     <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>IoT</title>
-    <script src=UpdateScript.js> </script>
     </head>
     <body>';
 //----------------------------------------------------------------------------------------
-$id = 1;
 $queryCount = "SELECT device_id from device_table;";
 $resultCount = pg_query($link, $queryCount);
 while ($rowName = pg_fetch_assoc($resultCount)) {
+    $id = $rowName['device_id'];
     //-----------------Получаем из БД все данные об устройстве-------------------
-    $query = "SELECT * from device_table WHERE device_id = $id;";
+    $query = "SELECT * FROM device_table WHERE device_id = $id;";
     $result = pg_query($link, $query);
     if (pg_num_rows($result) == 1) { //Если в БД есть данные о имени для этого устройства
         $Arr = pg_fetch_array($result);
@@ -55,25 +54,37 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
 
     if (isset($_POST['button_on'.$id.''])) {
         $date_today = date("Y-m-d H:i:s");
-        $query = "update OUT_STATE_TABLE set OUT_STATE=1, date_time='$date_today' where device_id = $id;";
-        $result = pg_query($link, $query);
-//        echo $result;
-        if (pg_affected_rows($result) != 1) //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-        { //вставляем в таблицу строчку с данными о команде для устройства
-            $query = "insert OUT_STATE_TABLE set device_id=$id, OUT_STATE='1', date_time='$date_today'";
-            $result = pg_query($link, $query);
-        }
+        $query_update = "UPDATE OUT_STATE_TABLE set OUT_STATE=1, date_time='$date_today' where device_id = $id;";
+        $query_insert = "INSERT INTO table_status (id_device, status, time) VALUES ($id, '1', '$date_today')";
+        $result_update = pg_query($link, $query_update);
+        $result_insert = pg_query($link, $query_insert);
+        
+        // Тупо закоментил, чтобы не было ошибок
+
+        // if (pg_affected_rows($link) != 1){
+
+        //      //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+        //      //вставляем в таблицу строчку с данными о команде для устройства
+
+        //     $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='1', date_time='$date_today';";
+        //     $result = pg_query($link, $query);
+        // }
     }
 
     if (isset($_POST['button_off' . $id . ''])) {
         $date_today = date("Y-m-d H:i:s");
-        $query = "UPDATE OUT_STATE_TABLE SET OUT_STATE='0', date_time='$date_today' WHERE device_id = $id;";
+        $query_update = "UPDATE OUT_STATE_TABLE SET OUT_STATE='0', date_time='$date_today' WHERE device_id = $id;";
+        $query_insert = "INSERT INTO table_status (id_device, status, time) VALUES ('$id', '0', '$date_today')";
         $result = pg_query($link, $query);
-        if (pg_affected_rows($result) != 1) //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-        { //вставляем в таблицу строчку с данными о команде для устройства
-            $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today'";
-            $result = pg_query($link, $query);
-        }
+        $result_insert = pg_query($link, $query_insert);
+        // if (pg_affected_rows($link) != 1) {
+
+        //     //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+        //      //вставляем в таблицу строчку с данными о команде для устройства
+
+        //     $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today';";
+        //     $result = pg_query($link, $query);
+        // }
     }
 
     //-----------------------------------------------------------------------
@@ -115,9 +126,11 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
             <form>
                 <button formmethod=POST name=button_off' . $id . ' value=' . $id . ' >Выключить реле</button>
             </form>
+            <form action="status.php" method="post">
+                <button formmethod=POST name="id" value=' . $id . ' >История управления устройством</button>
+            </form>
 
    ';
-    $id = $id + 1;
 }
 
 ?>
