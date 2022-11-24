@@ -54,37 +54,39 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
 
     if (isset($_POST['button_on'.$id.''])) {
         $date_today = date("Y-m-d H:i:s");
-        $query_update = "UPDATE OUT_STATE_TABLE set OUT_STATE=1, date_time='$date_today' where device_id = $id;";
+        $query_update = "UPDATE out_state_table set out_state=1, date_time='$date_today' where device_id = $id";
         $query_insert = "INSERT INTO table_status (id_device, status, time) VALUES ($id, '1', '$date_today')";
         $result_update = pg_query($link, $query_update);
         $result_insert = pg_query($link, $query_insert);
-        
-        // Тупо закоментил, чтобы не было ошибок
 
-        // if (pg_affected_rows($link) != 1){
+//         Тупо закоментил, чтобы не было ошибок
 
-        //      //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-        //      //вставляем в таблицу строчку с данными о команде для устройства
+         if (pg_affected_rows($result_update) != 1){
 
-        //     $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='1', date_time='$date_today';";
-        //     $result = pg_query($link, $query);
-        // }
+              //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+              //вставляем в таблицу строчку с данными о команде для устройства
+
+             $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='1', date_time='$date_today';";
+             $result = pg_query($link, $query);
+         }
     }
 
     if (isset($_POST['button_off' . $id . ''])) {
         $date_today = date("Y-m-d H:i:s");
-        $query_update = "UPDATE OUT_STATE_TABLE SET OUT_STATE='0', date_time='$date_today' WHERE device_id = $id;";
+        $query_update = "UPDATE out_state_table SET out_state=0, date_time='$date_today' WHERE device_id = $id";
         $query_insert = "INSERT INTO table_status (id_device, status, time) VALUES ('$id', '0', '$date_today')";
-        $result = pg_query($link, $query);
+        $result = pg_query($link, $query_update);
         $result_insert = pg_query($link, $query_insert);
-        // if (pg_affected_rows($link) != 1) {
 
-        //     //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-        //      //вставляем в таблицу строчку с данными о команде для устройства
 
-        //     $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today';";
-        //     $result = pg_query($link, $query);
-        // }
+        if (pg_affected_rows($result) != 1) {
+
+             //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+              //вставляем в таблицу строчку с данными о команде для устройства
+
+             $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today';";
+             $result = pg_query($link, $query);
+         }
     }
 
     //-----------------------------------------------------------------------
