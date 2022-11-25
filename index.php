@@ -8,8 +8,14 @@ include "dbconnect.php";
 echo '
     <!DOCTYPE HTML>
     <html id="App_interface">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>IoT</title>
+    <header>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </header>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>IoT</title>
+        
     </head>
     <body>';
 //----------------------------------------------------------------------------------------
@@ -52,7 +58,7 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
 
     //------Проверяем данные, полученные от пользователя---------------------
 
-    if (isset($_POST['button_on'.$id.''])) {
+    if (isset($_POST['button_on' . $id . ''])) {
         $date_today = date("Y-m-d H:i:s");
         $query_update = "UPDATE out_state_table set out_state=1, date_time='$date_today' where device_id = $id";
         $query_insert = "INSERT INTO table_status (id_device, status, time) VALUES ($id, '1', '$date_today')";
@@ -61,14 +67,14 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
 
 //         Тупо закоментил, чтобы не было ошибок
 
-         if (pg_affected_rows($result_update) != 1){
+        if (pg_affected_rows($result_update) != 1) {
 
-              //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-              //вставляем в таблицу строчку с данными о команде для устройства
+            //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+            //вставляем в таблицу строчку с данными о команде для устройства
 
-             $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='1', date_time='$date_today';";
-             $result = pg_query($link, $query);
-         }
+            $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='1', date_time='$date_today';";
+            $result = pg_query($link, $query);
+        }
     }
 
     if (isset($_POST['button_off' . $id . ''])) {
@@ -81,18 +87,20 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
 
         if (pg_affected_rows($result) != 1) {
 
-             //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
-              //вставляем в таблицу строчку с данными о команде для устройства
+            //Если не смогли обновить - значит в таблице просто нет данных о команде для этого устройства
+            //вставляем в таблицу строчку с данными о команде для устройства
 
-             $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today';";
-             $result = pg_query($link, $query);
-         }
+            $query = "INSERT OUT_STATE_TABLE SET device_id=$id, OUT_STATE='0', date_time='$date_today';";
+            $result = pg_query($link, $query);
+        }
     }
 
     //-----------------------------------------------------------------------
 
     //-------Формируем интерфейс приложения для браузера---------------------
     echo '
+    <div style="padding-bottom: 50px; padding-left: 20px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between">        
+        <div style="padding: 10px; margin-right: 5px">
         <table>
             <tr>
                 <td width=100px> Устройство:
@@ -122,17 +130,17 @@ while ($rowName = pg_fetch_assoc($resultCount)) {
             </tr>
         </table>
 
-<form>
-                <button formmethod=POST name=button_on' . $id . '  value=' . $id . ' >Включить реле</button>
-            </form>
-            <form>
-                <button formmethod=POST name=button_off' . $id . ' value=' . $id . ' >Выключить реле</button>
-            </form>
-            <form action="status.php" method="post">
-                <button formmethod=POST name="id" value=' . $id . ' >История управления устройством</button>
-            </form>
-
-   ';
+        <form>
+                <button formmethod=POST style="margin-top: 10px" class="btn btn-success" name=button_on' . $id . '  value=' . $id . ' >Включить реле</button>
+        </form>
+        <form>
+                <button formmethod=POST style="margin-top: 10px" class="btn btn-danger" name=button_off' . $id . ' value=' . $id . ' >Выключить реле</button>
+        </form>
+        <form action="status.php" method="post">
+                <button formmethod=POST style="margin-top: 10px" class="btn btn-info" name="id" value=' . $id . ' >История управления устройством</button>
+        </form>
+    </div>
+   </div>';
 }
 
 ?>
