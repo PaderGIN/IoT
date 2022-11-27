@@ -1,17 +1,13 @@
 <!DOCTYPE HTML>
 <html id="App_interface">
-<header>
-    <header>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    </header>
-</header>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Device status</title>
-    <a class="btn btn-primary" style="margin-left: 10px; margin-top: 10px" href="index.php"> Назад</a>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
     <body>
+    <div>
             <?php
                 include "dbconnect.php";
                 $id = $_POST['id'];
@@ -31,26 +27,25 @@
 
                 $query = "SELECT * FROM table_status WHERE id_device = $id";
                 $result = pg_query($link, $query);
+
                 echo '
-                    <tr >
-                        <td width=100px> Устройство:
-                        </td>
-                            <td width=40px>' . $device_name . '
-                        </td>
-                    </tr>
-                ';
-                echo '<table border=1 style="margin-left: 100px">';
+                <div style="display: flex; justify-content: center; margin-top: 25px;">
+                    <a class="btn btn-primary" style="margin-right: 20px; height: 85%; margin-top: 11px;" href="index.php"> Назад</a>
+                    <h1 style="text-align: center"> Устройство: ' . $device_name . '</h1>
+                </div>';
+
+                echo '<div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-top: 20px;">';
                 while ($rowName = pg_fetch_assoc($result)) {
                     echo '
-                        <tr>
-                            <td width=100px> Статус
-                            </td>
-                            <td width=40px>' . $rowName['status'] . '
-                            </td>
-                            <td width=150px>' . $rowName['time'] . '
-                            </td>
-                        </tr>
+                        <div style="display: flex; gap: 7px">
+                            <div> Статус</div>
+                            <div>' . $rowName['status'] . '</div>
+                            <div>' . $rowName['time'] . '</div>
+                        </div>
                     ';
                 }
                 echo '</table>';
             ?>
+        </div>
+    </body>
+</html>
