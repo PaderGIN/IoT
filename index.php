@@ -129,7 +129,7 @@
                     <form>
                             <button formmethod=POST style="margin-top: 10px" class="btn btn-danger" name=button_off' . $id . ' value=' . $id . ' >Выключить реле</button>
                     </form>
-                    <form action="status.php" method="post">
+                    <form action="auth.php" method="post">
                             <button formmethod=POST style="margin-top: 10px" class="btn btn-info" name="id" value=' . $id . ' >История управления устройством</button>
                     </form>
                 </div>
