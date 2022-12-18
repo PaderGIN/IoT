@@ -9,24 +9,20 @@
     <body>
     <div>
             <?php
-                include "dbconnect.php";
-                $id = $_POST['id'];
-                $queryCount = "SELECT device_id from device_table;";
-                $resultCount = pg_query($link, $queryCount);
-                $rowName = pg_fetch_array($resultCount);
+                include "db/dao.php";
+                $device_id = $_POST['device_id'];
                 //-----------------Получаем из БД все данные об устройстве-------------------
-                $query = "SELECT * from device_table WHERE device_id=$id";
-                $result = pg_query($link, $query);
+                $device_row = $dao -> get_device($device_id);
 
-                if (pg_num_rows($result) == 1) { //Если в БД есть данные о имени для этого устройства
-                    $Arr = pg_fetch_array($result);
-                    $device_name = $Arr['name'];
-                } else { //Если в БД нет данных о имени для этого устройства
+                if (pg_num_rows($device_row) == 1) { 
+                    //Если в БД есть данные о имени для этого устройства
+                    $device_name = pg_fetch_array($device_row)['name'];
+                } else { 
+                    //Если в БД нет данных о имени для этого устройства
                     $device_name = '?';
                 }
 
-                $query = "SELECT * FROM table_status WHERE id_device = $id";
-                $result = pg_query($link, $query);
+                $table_status_row = $dao -> get_table_status_by_device_id($device_id);
 
                 echo '
                 <div style="display: flex; justify-content: center; margin-top: 25px;">
@@ -35,12 +31,12 @@
                 </div>';
 
                 echo '<div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-top: 20px;">';
-                while ($rowName = pg_fetch_assoc($result)) {
+                while ($row = pg_fetch_assoc($table_status_row)) {
                     echo '
                         <div style="display: flex; gap: 7px">
                             <div> Статус</div>
-                            <div>' . $rowName['status'] . '</div>
-                            <div>' . $rowName['time'] . '</div>
+                            <div>' . $row['status'] . '</div>
+                            <div>' . $row['time'] . '</div>
                         </div>
                     ';
                 }

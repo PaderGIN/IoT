@@ -6,22 +6,21 @@
     <a href="index.php"> Назад</a> <br>
 </head>
 <body>
-<?php
-include "dbconnect.php";
-$id = $_POST['id'];
-$query = "SELECT device_login FROM device_table WHERE device_id = '$id'";
-$result = pg_query($link, $query);
-$row = pg_fetch_array($result);
-?>
+    <?php
+        include "db/dao.php";
 
-<form action="test.php?id=<?php echo $id ?>" method='post'>
-    <p><b>Авторизация</b></p>
+        $device_id = $_POST['device_id'];
+        $device_login = pg_fetch_array($dao -> get_device_login_by_id($device_id))['device_login'];
+    ?>
 
-    <input type="text" maxlength="30" size="40" name="login" placeholder="Введите логин "
-           value= <?php echo $row['device_login'] ?>><br>
+    <form action="test.php?device_id=<?php echo $device_id ?>" method='post'>
+        <p><b>Авторизация</b></p>
 
-    <input type="text" maxlength="30" size="40" name="pass" placeholder="Введите пароль"><br>
+        <input type="text" maxlength="30" size="40" name="login" placeholder="Введите логин "
+            value= <?php echo $device_login ?>><br>
 
-    <input type="submit" placeholder="Авторизоваться">
-</form>
+        <input type="text" maxlength="30" size="40" name="pass" placeholder="Введите пароль"><br>
+
+        <input type="submit" placeholder="Авторизоваться">
+    </form>
 </body>

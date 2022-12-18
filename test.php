@@ -1,22 +1,16 @@
 <?php
-
-include "dbconnect.php";
+include "db/dao.php";
 $login = "";
 $pass = "";
-$id = $_GET['id'];
+$device_id = $_GET['device_id'];
 $login = $_POST['login'];
 $pass = $_POST['pass'];
-$passHash = md5($pass);
-$query = "SELECT device_login FROM device_table WHERE device_id = '$id' AND device_login = '$login' AND device_hash = '$passHash'";
-$result = pg_query($link, $query);
-$row = pg_fetch_row($result);
+
+$row = pg_fetch_row($dao -> get_device_login($device_id, $login, md5($pass)));
 if ($pass != "" && $login != ""){
 
     if (is_countable($row) && count($row) > 0){
-        //header('x-data: '.$id);
-        //header('Location: status.php');
-        RedirectWithMethodPost("./status.php?id=$id");
-
+        RedirectWithMethodPost("./status.php?device_id=$device_id");
     }
     else{
         echo "<br> Неправильно введен пароль или логин от устройства";

@@ -9,5 +9,5 @@ $link = pg_connect("host=$db_host port=5432 user=$db_user password=$db_password 
 if ($link == False) {
     die("Cannot connect DB");
 }
-pg_query($connect, "set search_path = 'IoT'");
+pg_query($link, "set search_path = 'IoT'");
 ?>
