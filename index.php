@@ -5,9 +5,6 @@
     <title>IoT</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
 </head>
 <body>
     <h1 style="text-align: center; margin-bottom: 50px; margin-top: 30px;">Устройства</h1>
@@ -111,7 +108,7 @@
                             <form>
                                     <button formmethod=POST style="margin-top: 10px" class="btn btn-danger" name=button_off' . $device_id . ' value=' . $device_id . ' >Выключить реле</button>
                             </form>
-                            <form action="auth.php" method="post">
+                            <form action="login.php" method="post">
                                     <button formmethod=POST style="margin-top: 10px" class="btn btn-info" name="device_id" value=' . $device_id . ' >История управления устройством</button>
                             </form>
                         </div>
@@ -136,4 +133,7 @@
         ?>
     </div>
 </body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 </html>
